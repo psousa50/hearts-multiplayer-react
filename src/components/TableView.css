@@ -1,0 +1,29 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: green;
+  padding-left: 500px;
+  padding-right: 500px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.top-row {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+
+.mid-row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.bottom-row {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+

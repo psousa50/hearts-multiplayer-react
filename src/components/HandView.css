@@ -1,0 +1,13 @@
+.hand-horizontal {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  padding: 10px 50px 10px 50px;
+}
+
+.hand-verticval {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 10px 50px 10px 50px;
+}
