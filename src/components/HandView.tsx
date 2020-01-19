@@ -26,7 +26,7 @@ export const HandView: React.FC<HandViewProp> = ({ cardWidth, hand, onCardPlay, 
     <div className="hand-vertical">
       <div>{playerId}</div>
       {hand.map(card => (
-        <div key={`${card.faceValue}-${card.suit}`} style={{ marginTop: -getHeight(cardWidth) * 0.7}}>
+        <div key={`${card.faceValue}-${card.suit}`} style={{ marginTop: -getHeight(cardWidth) * 0.8}}>
           <CardView card={card} width={cardWidth} onClick={onCardPlay(playerId)} />
         </div>
       ))}

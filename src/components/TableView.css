@@ -3,8 +3,8 @@
   flex-direction: column;
   flex: 1;
   background-color: green;
-  padding-left: 500px;
-  padding-right: 500px;
+  padding-left: 300px;
+  padding-right: 300px;
   padding-top: 50px;
   padding-bottom: 50px;
 }
@@ -19,6 +19,7 @@
   display: flex;
   flex: 1;
   flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .bottom-row {

@@ -4,19 +4,26 @@ import { CardView } from "./CardView"
 
 import "./TrickView.css"
 
-const width = 167.0869141
-const height = 242.6669922
-const aspectRatio = height / width
-
-export const getHeight = (width: number) => aspectRatio * width
-
 interface TrickViewProps {
   trick: Trick
+  firstPlayerIndex: number
   width: number
 }
 
-export const TrickView: React.FC<TrickViewProps> = ({ trick, width }) => (
-  <div className="trick">
-    {trick.map(card => <div key={`${card.faceValue}-${card.suit}`} className="trick-card"><CardView card={card} width={width} /></div>)}
-  </div>
-)
+export const TrickView: React.FC<TrickViewProps> = ({ firstPlayerIndex: firstPlayedIndex, trick, width }) => {
+  const Card = (player: number) => {
+    const index = (player + firstPlayedIndex) % 4
+    return index < trick.length ? <CardView card={trick[index]} width={width} /> : null
+  }
+
+  return (
+    <div className="trick">
+      <div className="top">{Card(2)}</div>
+      <div className="middle">
+        <div className="left">{Card(3)}</div>
+        <div className="right">{Card(1)}</div>
+      </div>
+      <div className="bottom">{Card(0)}</div>
+    </div>
+  )
+}
