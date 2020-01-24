@@ -22,7 +22,6 @@ const getRight = <L, A>(fa: Either<L, A>) =>
 
 const App: React.FC = () => {
 
-  console.log("=====>", "APP")
   const game = getRight(pipe(Game.create(players)(defaulEnvironment)))
 
   return <GameView initialGame={game} />

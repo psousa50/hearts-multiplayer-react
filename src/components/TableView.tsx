@@ -23,7 +23,7 @@ export const TableView: React.FC<TableViewProps> = ({ game, onCardPlay, trick })
 
   return (
     <div className="table">
-      <div className="top-row">
+      <div className="topRow">
         <HandView
           playerId={topPlayer.id}
           hand={topPlayer.hand}
@@ -33,21 +33,27 @@ export const TableView: React.FC<TableViewProps> = ({ game, onCardPlay, trick })
         />
       </div>
       <div className="mid-row">
-        <HandView
-          playerId={leftPlayer.id}
-          hand={leftPlayer.hand}
-          orientation="vertical"
-          cardWidth={cardWidth}
-          onCardPlay={onCardPlay}
-        />
-        <TrickView trick={trick} width={cardWidth} />
-        <HandView
-          playerId={rightPlayer.id}
-          hand={rightPlayer.hand}
-          orientation="vertical"
-          cardWidth={cardWidth}
-          onCardPlay={onCardPlay}
-        />
+        <div className="mid-row-left">
+          <HandView
+            playerId={leftPlayer.id}
+            hand={leftPlayer.hand}
+            orientation="vertical"
+            cardWidth={cardWidth}
+            onCardPlay={onCardPlay}
+          />
+        </div>
+        <div className="mid-row-trick">
+          <TrickView trick={trick} width={cardWidth} />
+        </div>
+        <div className="mid-row-right">
+          <HandView
+            playerId={rightPlayer.id}
+            hand={rightPlayer.hand}
+            orientation="vertical"
+            cardWidth={cardWidth}
+            onCardPlay={onCardPlay}
+          />
+        </div>
       </div>
       <div className="bottom-row">
         <HandView

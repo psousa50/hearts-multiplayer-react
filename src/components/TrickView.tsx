@@ -16,7 +16,7 @@ export const TrickView: React.FC<TrickViewProps> = ({ trick, width }) => {
     return index < trick.cards.length ? (
       <CardView card={trick.cards[index]} width={width} />
     ) : (
-      <div style={{ backgroundColor: "yellow", borderWidth: 1, border: "solid"}}>
+      <div>
         <img width={width} height={getHeight(width)} src={emptyCard} alt=""></img>
       </div>
     )

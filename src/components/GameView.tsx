@@ -15,6 +15,9 @@ import { Card } from "../hearts-game-core/Cards/model"
 import { chain } from "fp-ts/lib/ReaderEither"
 import { defaulEnvironment } from "../environment"
 
+import "./GameView.css"
+
+
 interface GameViewProps {
   initialGame: GameModel.Game
 }
@@ -136,7 +139,7 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
 
   const trick = state.game.currentTrick.cards.length === 0 ? state.game.lastTrick : state.game.currentTrick
   return (
-    <div>
+    <div className="game">
       <button onClick={startGame}>{"START"}</button>
       <button onClick={nextPlay}>{"PLAY"}</button>
       <div>{state.error}</div>
