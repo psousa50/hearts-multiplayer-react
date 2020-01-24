@@ -23,6 +23,7 @@ interface GameState {
   game: GameModel.Game
   nextPlayerId: string
   move?: MoveModels.Move
+  trickFinished: boolean
   error: string
 }
 
@@ -37,7 +38,7 @@ const randomMove = (event: PlayerEvent) => {
     Game.isValidMove(event.gameState, event.playerState, Move.createCardMove(card)),
   )
 
-  return validCards.length > 0 ? Move.createCardMove(validCards[0]) : undefined
+  return validCards.length > 0 ? Move.createCardMove(validCards[Math.floor(Math.random() * validCards.length)]) : undefined
 }
 
 type PlayFunction = (event: PlayerEvent) => MoveModels.Move | undefined
@@ -50,7 +51,7 @@ const play: PlayFunctions = {
   [PlayerType.Random]: randomMove,
 }
 
-const p1 = Player.create("p1", "Player 1", PlayerType.Human)
+const p1 = Player.create("p1", "Player 1", PlayerType.Random)
 const p2 = Player.create("p2", "Player 2", PlayerType.Random)
 const p3 = Player.create("p3", "Player 3", PlayerType.Random)
 const p4 = Player.create("p4", "Player 4", PlayerType.Random)
@@ -61,16 +62,23 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
     game: initialGame,
     error: "",
     nextPlayerId: "",
+    trickFinished: false,
   })
 
-  console.log("=====>", state)
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (state.game.stage === GameModel.GameStage.Playing && !state.trickFinished) {
+        nextPlay()
+      }
+    }, 1000)
+    return () => clearTimeout(timer)
+  })
 
   const mergeState = (newState: Partial<GameState>) => {
     setState(state => ({ ...state, ...newState }))
   }
 
   const playerEventDispatcher = (playerId: PlayerId, event: PlayerEvent) => {
-    console.log("EVENT=====>", event)
     switch (event.type) {
       case PlayerEventType.Play:
         mergeState({ nextPlayerId: playerId })
@@ -79,6 +87,9 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
         if (move) {
           mergeState({ move })
         }
+        break
+      case PlayerEventType.TrickFinished:
+        mergeState({trickFinished: true})
         break
     }
   }
@@ -112,8 +123,8 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
   }
 
   const nextPlay = () => {
-    if (state.move && state.move.type === MoveModels.MoveType.Card &&  state.nextPlayerId){
-      mergeState({ move : undefined })
+    if (state.move && state.move.type === MoveModels.MoveType.Card && state.nextPlayerId) {
+      mergeState({ move: undefined, trickFinished: false })
       onCardPlay(state.nextPlayerId)(state.move.card)
     }
   }
