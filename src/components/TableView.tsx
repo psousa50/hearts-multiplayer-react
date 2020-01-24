@@ -21,8 +21,6 @@ export const TableView: React.FC<TableViewProps> = ({ game, onCardPlay, trick })
   const topPlayer = game.players[2]
   const rightPlayer = game.players[3]
 
-  console.log("SSS=====>", game.trickFirstPlayerIndex)
-
   return (
     <div className="table">
       <div className="top-row">
@@ -42,7 +40,7 @@ export const TableView: React.FC<TableViewProps> = ({ game, onCardPlay, trick })
           cardWidth={cardWidth}
           onCardPlay={onCardPlay}
         />
-        <TrickView trick={trick} firstPlayerIndex={game.trickFirstPlayerIndex} width={cardWidth} />
+        <TrickView trick={trick} width={cardWidth} />
         <HandView
           playerId={rightPlayer.id}
           hand={rightPlayer.hand}

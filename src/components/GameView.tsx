@@ -11,7 +11,7 @@ import { Either, fold } from "fp-ts/lib/Either"
 import { Environment } from "../hearts-game-core/Environment/model"
 import { PlayerEvent, PlayerEventType } from "../hearts-game-core/Events/model"
 import { PlayerId } from "../hearts-game-core/Players/model"
-import { Card, Trick } from "../hearts-game-core/Cards/model"
+import { Card } from "../hearts-game-core/Cards/model"
 import { chain } from "fp-ts/lib/ReaderEither"
 import { defaulEnvironment } from "../environment"
 
@@ -21,16 +21,39 @@ interface GameViewProps {
 
 interface GameState {
   game: GameModel.Game
-  lastTrick: Trick | undefined
   nextPlayerId: string
   move?: MoveModels.Move
   error: string
 }
 
-const p1 = Player.create("p1", "Player 1")
-const p2 = Player.create("p2", "Player 2")
-const p3 = Player.create("p3", "Player 3")
-const p4 = Player.create("p4", "Player 4")
+enum PlayerType {
+  Random = "Random",
+  MCTS = "MCTS",
+  Human = "Human",
+}
+
+const randomMove = (event: PlayerEvent) => {
+  const validCards = event.playerState.hand.filter(card =>
+    Game.isValidMove(event.gameState, event.playerState, Move.createCardMove(card)),
+  )
+
+  return validCards.length > 0 ? Move.createCardMove(validCards[0]) : undefined
+}
+
+type PlayFunction = (event: PlayerEvent) => MoveModels.Move | undefined
+type PlayFunctions = {
+  [k: string]: PlayFunction
+}
+
+const play: PlayFunctions = {
+  [PlayerType.Human]: () => undefined,
+  [PlayerType.Random]: randomMove,
+}
+
+const p1 = Player.create("p1", "Player 1", PlayerType.Human)
+const p2 = Player.create("p2", "Player 2", PlayerType.Random)
+const p3 = Player.create("p3", "Player 3", PlayerType.Random)
+const p4 = Player.create("p4", "Player 4", PlayerType.Random)
 const players = [p1, p2, p3, p4]
 
 export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
@@ -38,7 +61,6 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
     game: initialGame,
     error: "",
     nextPlayerId: "",
-    lastTrick: undefined,
   })
 
   console.log("=====>", state)
@@ -52,13 +74,11 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
     switch (event.type) {
       case PlayerEventType.Play:
         mergeState({ nextPlayerId: playerId })
-        const validCards = event.playerState.hand.filter(card =>
-          Game.isValidMove(event.gameState, event.playerState, Move.createCardMove(card)),
-        )
-        mergeState({ move: Move.createCardMove(validCards[0])})
-        break
-      case PlayerEventType.TrickFinished:
-        mergeState({ lastTrick: event.gameState.currentTrick })
+        const move = play[event.playerState.type](event)
+        console.log("=====>", move)
+        if (move) {
+          mergeState({ move })
+        }
         break
     }
   }
@@ -88,23 +108,22 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
   }
 
   const startGame = () => {
-    mergeState({ lastTrick: undefined})
     setGame(pipe(Game.create(players), chain(Game.start))(environment))
   }
 
   const nextPlay = () => {
     if (state.move && state.move.type === MoveModels.MoveType.Card &&  state.nextPlayerId){
+      mergeState({ move : undefined })
       onCardPlay(state.nextPlayerId)(state.move.card)
     }
   }
 
   const onCardPlay = (playerId: PlayerId) => (card: Card) => {
     console.log("onCardPlay=====>", playerId, card)
-    mergeState({ lastTrick: undefined })
     doGameAction(Game.played(playerId, Move.createCardMove(card)))
   }
 
-  const trick = state.lastTrick || state.game.currentTrick
+  const trick = state.game.currentTrick.cards.length === 0 ? state.game.lastTrick : state.game.currentTrick
   return (
     <div>
       <button onClick={startGame}>{"START"}</button>

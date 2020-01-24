@@ -2,6 +2,8 @@ import { Card } from "../hearts-game-core/Cards/model"
 
 type indexed = { [k: string]: string }
 
+export const emptyCard = require("./cards/card-empty.png")
+
 const cardImages: indexed  = {
   card10C: require("./cards/10C.svg"),
   card10D: require("./cards/10D.svg"),
