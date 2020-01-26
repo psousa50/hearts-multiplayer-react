@@ -1,9 +1,9 @@
 import React from "react"
-import { Trick } from "../hearts-game-core/Cards/model"
 import { CardView, getHeight } from "./CardView"
-
-import "./TrickView.css"
 import { emptyCard } from "../images/cards"
+import { Trick } from "../hearts-game-core/Tricks/model"
+
+require( "./TrickView.css")
 
 interface TrickViewProps {
   trick: Trick

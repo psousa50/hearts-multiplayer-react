@@ -2,7 +2,7 @@ import React from "react"
 import { Card } from "../hearts-game-core/Cards/model"
 import { getCardImages } from "../images/cards"
 
-import "./CardView.css"
+require ("./CardView.css")
 
 const width = 167.0869141
 const height = 242.6669922

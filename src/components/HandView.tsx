@@ -3,7 +3,7 @@ import { Hand, Card } from "../hearts-game-core/Cards/model"
 import { CardView, getHeight } from "./CardView"
 import { PlayerId } from "../hearts-game-core/Players/model"
 
-import "./HandView.css"
+require("./HandView.css")
 
 interface HandViewProp {
   playerId: PlayerId
@@ -17,7 +17,7 @@ export const HandView: React.FC<HandViewProp> = ({ cardWidth, hand, onCardPlay, 
   orientation === "horizontal" ? (
     <div className="hand-horizontal">
       {hand.map(card => (
-        <div key={`${card.faceValue}-${card.suit}`} style={{ marginLeft: -cardWidth * 0.7}}>
+        <div key={`${card.faceValue}-${card.suit}`} style={{ marginLeft: -cardWidth * 0.7 }}>
           <CardView card={card} width={cardWidth} onClick={onCardPlay(playerId)} />
         </div>
       ))}
@@ -25,7 +25,7 @@ export const HandView: React.FC<HandViewProp> = ({ cardWidth, hand, onCardPlay, 
   ) : (
     <div className="hand-vertical">
       {hand.map(card => (
-        <div key={`${card.faceValue}-${card.suit}`} style={{ marginTop: -getHeight(cardWidth) * 0.8}}>
+        <div key={`${card.faceValue}-${card.suit}`} style={{ marginTop: -getHeight(cardWidth) * 0.8 }}>
           <CardView card={card} width={cardWidth} onClick={onCardPlay(playerId)} />
         </div>
       ))}

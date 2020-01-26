@@ -2,10 +2,11 @@ import React from "react"
 import { Game } from "../hearts-game-core/Game/model"
 import { HandView } from "./HandView"
 import { TrickView } from "./TrickView"
-import { Card, Trick } from "../hearts-game-core/Cards/model"
+import { Card } from "../hearts-game-core/Cards/model"
 import { PlayerId } from "../hearts-game-core/Players/model"
+import { Trick } from "../hearts-game-core/Tricks/model"
 
-import "./TableView.css"
+require ( "./TableView.css")
 
 interface TableViewProps {
   game: Game

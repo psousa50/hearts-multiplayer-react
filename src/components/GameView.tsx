@@ -14,9 +14,9 @@ import { PlayerId } from "../hearts-game-core/Players/model"
 import { Card } from "../hearts-game-core/Cards/model"
 import { chain } from "fp-ts/lib/ReaderEither"
 import { defaulEnvironment } from "../environment"
+import { findBestMove } from "../hearts-game-core/AI/mcts"
 
-import "./GameView.css"
-
+require("./GameView.css")
 
 interface GameViewProps {
   initialGame: GameModel.Game
@@ -38,11 +38,15 @@ enum PlayerType {
 
 const randomMove = (event: PlayerEvent) => {
   const validCards = event.playerState.hand.filter(card =>
-    Game.isValidMove(event.gameState, event.playerState, Move.createCardMove(card)),
+    Game.isValidMove(event.gameState, event.playerState)(Move.createCardMove(card)),
   )
 
-  return validCards.length > 0 ? Move.createCardMove(validCards[Math.floor(Math.random() * validCards.length)]) : undefined
+  return validCards.length > 0
+    ? Move.createCardMove(validCards[Math.floor(Math.random() * validCards.length)])
+    : undefined
 }
+
+const mctsMove = (event: PlayerEvent) => findBestMove(event.gameState, event.playerState)
 
 type PlayFunction = (event: PlayerEvent) => MoveModels.Move | undefined
 type PlayFunctions = {
@@ -52,9 +56,10 @@ type PlayFunctions = {
 const play: PlayFunctions = {
   [PlayerType.Human]: () => undefined,
   [PlayerType.Random]: randomMove,
+  [PlayerType.MCTS]: mctsMove,
 }
 
-const p1 = Player.create("p1", "Player 1", PlayerType.Random)
+const p1 = Player.create("p1", "Player 1", PlayerType.MCTS)
 const p2 = Player.create("p2", "Player 2", PlayerType.Random)
 const p3 = Player.create("p3", "Player 3", PlayerType.Random)
 const p4 = Player.create("p4", "Player 4", PlayerType.Random)
@@ -86,15 +91,15 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
       case PlayerEventType.Play:
         mergeState({ nextPlayerId: playerId })
         const move = play[event.playerState.type](event)
-        console.log("=====>", move)
         if (move) {
           mergeState({ move })
         }
         break
       case PlayerEventType.TrickFinished:
-        mergeState({trickFinished: true})
+        mergeState({ trickFinished: true })
         break
     }
+    return undefined
   }
 
   const environment: Environment = {
