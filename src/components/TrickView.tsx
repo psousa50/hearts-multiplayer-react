@@ -22,8 +22,6 @@ export const TrickView: React.FC<TrickViewProps> = ({ trick, width }) => {
     )
   }
 
-  console.log("TRICK=====>", trick)
-
   return (
     <div className="trick">
       <div className="top">{Card(2)}</div>

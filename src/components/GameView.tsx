@@ -46,7 +46,7 @@ const randomMove = (event: PlayerEvent) => {
     : undefined
 }
 
-const mctsMove = (event: PlayerEvent) => findBestMove(event.gameState, event.playerState)
+const mctsMove = (event: PlayerEvent) => findBestMove(event.gameState, event.playerState, { timeLimitMs: 500} )
 
 type PlayFunction = (event: PlayerEvent) => MoveModels.Move | undefined
 type PlayFunctions = {
@@ -60,9 +60,9 @@ const play: PlayFunctions = {
 }
 
 const p1 = Player.create("p1", "Player 1", PlayerType.MCTS)
-const p2 = Player.create("p2", "Player 2", PlayerType.Random)
-const p3 = Player.create("p3", "Player 3", PlayerType.Random)
-const p4 = Player.create("p4", "Player 4", PlayerType.Random)
+const p2 = Player.create("p2", "Player 2", PlayerType.MCTS)
+const p3 = Player.create("p3", "Player 3", PlayerType.MCTS)
+const p4 = Player.create("p4", "Player 4", PlayerType.MCTS)
 const players = [p1, p2, p3, p4]
 
 export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
@@ -78,7 +78,7 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
       if (state.game.stage === GameModel.GameStage.Playing && !state.trickFinished) {
         nextPlay()
       }
-    }, 1000)
+    }, 100)
     return () => clearTimeout(timer)
   })
 
@@ -138,7 +138,6 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
   }
 
   const onCardPlay = (playerId: PlayerId) => (card: Card) => {
-    console.log("onCardPlay=====>", playerId, card)
     doGameAction(Game.played(playerId, Move.createCardMove(card)))
   }
 
@@ -153,3 +152,4 @@ export const GameView: React.FC<GameViewProps> = ({ initialGame }) => {
     </div>
   )
 }
+
