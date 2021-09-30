@@ -46,7 +46,7 @@ const randomMove = (event: PlayerEvent) => {
     : undefined
 }
 
-const mctsMove = (event: PlayerEvent) => findBestMove(event.gameState, event.playerState, { timeLimitMs: 500} )
+const mctsMove = (event: PlayerEvent) => findBestMove(event.gameState, event.playerState, { timeLimitMs: 2000 } )
 
 type PlayFunction = (event: PlayerEvent) => MoveModels.Move | undefined
 type PlayFunctions = {
@@ -59,7 +59,7 @@ const play: PlayFunctions = {
   [PlayerType.MCTS]: mctsMove,
 }
 
-const p1 = Player.create("p1", "Player 1", PlayerType.MCTS)
+const p1 = Player.create("p1", "Player 1", PlayerType.Human)
 const p2 = Player.create("p2", "Player 2", PlayerType.MCTS)
 const p3 = Player.create("p3", "Player 3", PlayerType.MCTS)
 const p4 = Player.create("p4", "Player 4", PlayerType.MCTS)
